@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
 import { useAuthStore } from '../hooks/useAuthStore';
+import { useLanguage, languageNames, Language } from '../contexts/LanguageContext';
 
 interface Service {
   id: string;
@@ -35,10 +36,36 @@ function formatDate(dateStr: string): string {
   return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long' });
 }
 
+function TranslateIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m5 8 6 6" />
+      <path d="m4 14 6-6 2-3" />
+      <path d="M2 5h12" />
+      <path d="M7 2h1" />
+      <path d="m22 22-5-10-5 10" />
+      <path d="M14 18h6" />
+    </svg>
+  );
+}
+
 export function BookingPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { user, token } = useAuthStore();
+  const { t, language, setLanguage } = useLanguage();
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
 
   const [business, setBusiness] = useState<Business | null>(null);
   const [services, setServices] = useState<Service[]>([]);
@@ -54,6 +81,17 @@ export function BookingPage() {
   const [error, setError] = useState('');
 
   const dates = getDatesForNextDays(30);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   // Load business + services
   useEffect(() => {
@@ -112,8 +150,9 @@ export function BookingPage() {
       });
       setStep('done');
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { error?: string } } })
-        ?.response?.data?.error || 'Something went wrong. Please try again.';
+      const msg =
+        (err as { response?: { data?: { error?: string } } })?.response?.data?.error ||
+        'Something went wrong. Please try again.';
       setError(msg);
     } finally {
       setSubmitting(false);
@@ -123,7 +162,7 @@ export function BookingPage() {
   if (!business) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-ink-400 font-mono text-sm">Loading…</div>
+        <div className="animate-pulse text-ink-400 font-mono text-sm">{t.loading}</div>
       </div>
     );
   }
@@ -132,8 +171,38 @@ export function BookingPage() {
     <div className="min-h-screen px-6 py-12">
       <div className="max-w-lg mx-auto">
         {/* Header */}
-        <div className="mb-8 text-center">
-          <span className="font-display text-sm text-amber-500 italic">Schedully</span>
+        <div className="mb-8 text-center relative">
+          {/* Language selector — top right */}
+          <div className="absolute right-0 top-0" ref={langRef}>
+            <button
+              type="button"
+              onClick={() => setLangOpen((o) => !o)}
+              className="btn-ghost text-xs flex items-center gap-1 px-2 py-1"
+              title="Language / Idioma"
+            >
+              <TranslateIcon />
+            </button>
+            {langOpen && (
+              <div className="absolute right-0 top-full mt-1 bg-ink-800 border border-ink-700 rounded-xl shadow-xl py-1 z-50 min-w-[140px] animate-fade-in">
+                {(Object.entries(languageNames) as [Language, string][]).map(([code, name]) => (
+                  <button
+                    key={code}
+                    type="button"
+                    onClick={() => { setLanguage(code); setLangOpen(false); }}
+                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                      language === code
+                        ? 'text-amber-500 bg-amber-500/5'
+                        : 'text-ink-300 hover:text-ink-100 hover:bg-ink-700'
+                    }`}
+                  >
+                    {name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <span className="font-display text-sm text-amber-500 italic">{t.booking.poweredBy}</span>
           <h1 className="font-display text-4xl text-ink-100 mt-2 mb-1">{business.name}</h1>
           {business.description && (
             <p className="text-ink-400 text-sm">{business.description}</p>
@@ -165,7 +234,7 @@ export function BookingPage() {
         {/* ── STEP 1: Choose service ── */}
         {step === 'service' && (
           <div className="animate-fade-up space-y-3">
-            <h2 className="font-display text-2xl text-ink-100 mb-4">Choose a service</h2>
+            <h2 className="font-display text-2xl text-ink-100 mb-4">{t.booking.chooseService}</h2>
             {services.map((s) => (
               <button
                 key={s.id}
@@ -180,7 +249,9 @@ export function BookingPage() {
                     {s.description && (
                       <p className="text-ink-400 text-sm mt-0.5">{s.description}</p>
                     )}
-                    <p className="text-ink-500 text-xs mt-1 font-mono">{s.durationMinutes} min</p>
+                    <p className="text-ink-500 text-xs mt-1 font-mono">
+                      {s.durationMinutes} {t.booking.min}
+                    </p>
                   </div>
                   <span className="font-display text-xl text-amber-500 ml-4">
                     €{parseFloat(s.price).toFixed(2)}
@@ -195,24 +266,28 @@ export function BookingPage() {
         {step === 'date' && selectedService && (
           <div className="animate-fade-up">
             <div className="flex items-center gap-3 mb-6">
-              <button onClick={() => setStep('service')} className="text-ink-400 hover:text-ink-100 transition-colors">
-                ← Back
+              <button
+                onClick={() => setStep('service')}
+                className="text-ink-400 hover:text-ink-100 transition-colors"
+              >
+                {t.booking.back}
               </button>
-              <h2 className="font-display text-2xl text-ink-100">Choose a date</h2>
+              <h2 className="font-display text-2xl text-ink-100">{t.booking.chooseDate}</h2>
             </div>
 
             <div className="card mb-4 flex items-center justify-between">
               <span className="text-ink-300 text-sm">{selectedService.name}</span>
-              <span className="font-mono text-xs text-ink-500">{selectedService.durationMinutes} min</span>
+              <span className="font-mono text-xs text-ink-500">
+                {selectedService.durationMinutes} {t.booking.min}
+              </span>
             </div>
 
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-              {dates.map((date) => {
+              {dates.map((date, idx) => {
                 const d = new Date(date + 'T12:00:00');
                 const dayName = d.toLocaleString('default', { weekday: 'short' });
                 const dayNum = d.getDate();
                 const month = d.toLocaleString('default', { month: 'short' });
-                const isToday = date === dates[0];
                 return (
                   <button
                     key={date}
@@ -221,7 +296,9 @@ export function BookingPage() {
                       selectedDate === date ? 'border-amber-500 bg-amber-500/5' : ''
                     }`}
                   >
-                    <p className="font-mono text-xs text-ink-500">{isToday ? 'Today' : dayName}</p>
+                    <p className="font-mono text-xs text-ink-500">
+                      {idx === 0 ? t.booking.today : dayName}
+                    </p>
                     <p className="font-display text-xl text-ink-100">{dayNum}</p>
                     <p className="font-mono text-xs text-ink-500">{month}</p>
                   </button>
@@ -235,26 +312,31 @@ export function BookingPage() {
         {step === 'slot' && selectedService && selectedDate && (
           <div className="animate-fade-up">
             <div className="flex items-center gap-3 mb-6">
-              <button onClick={() => setStep('date')} className="text-ink-400 hover:text-ink-100 transition-colors">
-                ← Back
+              <button
+                onClick={() => setStep('date')}
+                className="text-ink-400 hover:text-ink-100 transition-colors"
+              >
+                {t.booking.back}
               </button>
-              <h2 className="font-display text-2xl text-ink-100">Choose a time</h2>
+              <h2 className="font-display text-2xl text-ink-100">{t.booking.chooseTime}</h2>
             </div>
 
             <div className="card mb-4">
-              <p className="text-ink-300 text-sm">{selectedService.name} · {formatDate(selectedDate)}</p>
+              <p className="text-ink-300 text-sm">
+                {selectedService.name} · {formatDate(selectedDate)}
+              </p>
             </div>
 
             {slotsLoading ? (
               <div className="text-center py-8 text-ink-400 font-mono text-sm animate-pulse">
-                Checking availability…
+                {t.booking.checkingAvailability}
               </div>
             ) : slots.length === 0 ? (
               <div className="card text-center py-8">
-                <p className="font-display text-xl text-ink-400 mb-2">No availability</p>
-                <p className="text-ink-500 text-sm">Try another date.</p>
+                <p className="font-display text-xl text-ink-400 mb-2">{t.booking.noAvailability}</p>
+                <p className="text-ink-500 text-sm">{t.booking.tryAnotherDate}</p>
                 <button onClick={() => setStep('date')} className="btn-ghost mt-4 text-sm">
-                  ← Choose another date
+                  {t.booking.chooseAnotherDate}
                 </button>
               </div>
             ) : (
@@ -277,29 +359,39 @@ export function BookingPage() {
         {step === 'confirm' && selectedService && selectedDate && selectedSlot && (
           <div className="animate-fade-up">
             <div className="flex items-center gap-3 mb-6">
-              <button onClick={() => setStep('slot')} className="text-ink-400 hover:text-ink-100 transition-colors">
-                ← Back
+              <button
+                onClick={() => setStep('slot')}
+                className="text-ink-400 hover:text-ink-100 transition-colors"
+              >
+                {t.booking.back}
               </button>
-              <h2 className="font-display text-2xl text-ink-100">Confirm booking</h2>
+              <h2 className="font-display text-2xl text-ink-100">{t.booking.confirmBooking}</h2>
             </div>
 
             {/* Summary */}
             <div className="card mb-4 space-y-3">
-              <Row label="Service" value={selectedService.name} />
-              <Row label="Date" value={formatDate(selectedDate)} />
-              <Row label="Time" value={selectedSlot} />
-              <Row label="Duration" value={`${selectedService.durationMinutes} min`} />
+              <Row label={t.booking.service} value={selectedService.name} />
+              <Row label={t.booking.date} value={formatDate(selectedDate)} />
+              <Row label={t.booking.time} value={selectedSlot} />
+              <Row
+                label={t.booking.duration}
+                value={`${selectedService.durationMinutes} ${t.booking.min}`}
+              />
               <div className="border-t border-ink-700 pt-3">
-                <Row label="Total" value={`€${parseFloat(selectedService.price).toFixed(2)}`} highlight />
+                <Row
+                  label={t.booking.total}
+                  value={`€${parseFloat(selectedService.price).toFixed(2)}`}
+                  highlight
+                />
               </div>
             </div>
 
             {/* Notes */}
             <div className="mb-4">
-              <label className="label">Notes (optional)</label>
+              <label className="label">{t.booking.notes}</label>
               <textarea
                 className="input-field resize-none h-20"
-                placeholder="Any info for the business…"
+                placeholder={t.booking.notesPlaceholder}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
               />
@@ -307,7 +399,7 @@ export function BookingPage() {
 
             {!user && (
               <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg px-4 py-3 mb-4 text-sm text-amber-400">
-                You'll be asked to sign in or create an account to confirm this booking.
+                {t.booking.signInNotice}
               </div>
             )}
 
@@ -322,7 +414,11 @@ export function BookingPage() {
               disabled={submitting}
               className="btn-primary w-full"
             >
-              {submitting ? 'Booking…' : user ? 'Confirm booking →' : 'Sign in & confirm →'}
+              {submitting
+                ? t.booking.bookingInProgress
+                : user
+                ? t.booking.confirmBtn
+                : t.booking.signInConfirmBtn}
             </button>
           </div>
         )}
@@ -333,13 +429,11 @@ export function BookingPage() {
             <div className="w-16 h-16 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mx-auto mb-6">
               <span className="text-3xl">✓</span>
             </div>
-            <h2 className="font-display text-3xl text-ink-100 mb-2">All booked!</h2>
+            <h2 className="font-display text-3xl text-ink-100 mb-2">{t.booking.allBooked}</h2>
             <p className="text-ink-400 text-sm mb-2">
               {selectedService?.name} · {formatDate(selectedDate)} at {selectedSlot}
             </p>
-            <p className="text-ink-500 text-xs mb-8">
-              The business will confirm your appointment shortly.
-            </p>
+            <p className="text-ink-500 text-xs mb-8">{t.booking.bookedSoon}</p>
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => {
@@ -351,10 +445,10 @@ export function BookingPage() {
                 }}
                 className="btn-ghost"
               >
-                Book again
+                {t.booking.bookAgain}
               </button>
               <button onClick={() => navigate('/dashboard')} className="btn-primary">
-                View my bookings →
+                {t.booking.viewMyBookings}
               </button>
             </div>
           </div>
@@ -368,7 +462,11 @@ function Row({ label, value, highlight }: { label: string; value: string; highli
   return (
     <div className="flex items-center justify-between">
       <span className="text-ink-400 text-sm">{label}</span>
-      <span className={`text-sm font-medium ${highlight ? 'text-amber-500 font-display text-lg' : 'text-ink-100'}`}>
+      <span
+        className={`text-sm font-medium ${
+          highlight ? 'text-amber-500 font-display text-lg' : 'text-ink-100'
+        }`}
+      >
         {value}
       </span>
     </div>
