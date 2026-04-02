@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../lib/api';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface Booking {
   id: string;
@@ -20,6 +21,7 @@ const STATUS_STYLES = {
 };
 
 export function ClientBookingsTab() {
+  const { t } = useLanguage();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,13 +32,19 @@ export function ClientBookingsTab() {
     });
   }, []);
 
-  if (loading) return <div className="text-ink-400 font-mono text-sm animate-pulse">Loading…</div>;
+  const statusLabels = {
+    pending: t.bookings.pending,
+    confirmed: t.bookings.confirmed,
+    cancelled: t.bookings.cancelled,
+  };
+
+  if (loading) return <div className="text-ink-400 font-mono text-sm animate-pulse">{t.loading}</div>;
 
   if (bookings.length === 0) {
     return (
       <div className="card text-center py-16">
-        <p className="font-display text-2xl text-ink-300 mb-2">No bookings yet</p>
-        <p className="text-ink-500 text-sm mb-6">Find a business and make your first appointment.</p>
+        <p className="font-display text-2xl text-ink-300 mb-2">{t.clientBookings.empty}</p>
+        <p className="text-ink-500 text-sm mb-6">{t.clientBookings.emptyHint}</p>
       </div>
     );
   }
@@ -60,7 +68,7 @@ export function ClientBookingsTab() {
               <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <span className="font-medium text-ink-100">{booking.service.name}</span>
                 <span className={`text-xs px-2 py-0.5 rounded-full border font-mono ${STATUS_STYLES[booking.status]}`}>
-                  {booking.status}
+                  {statusLabels[booking.status]}
                 </span>
               </div>
               <p className="text-ink-400 text-sm">{booking.business.name} · {booking.startTime}–{booking.endTime}</p>
@@ -77,7 +85,7 @@ export function ClientBookingsTab() {
                 to={`/book/${booking.business.slug}`}
                 className="text-xs text-ink-400 hover:text-amber-500 transition-colors mt-1 block"
               >
-                Book again →
+                {t.clientBookings.bookAgain}
               </Link>
             </div>
           </div>

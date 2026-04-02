@@ -12,7 +12,6 @@ const defaultSlot = (): DaySlot => ({ enabled: false, startTime: '09:00', endTim
 
 export function AvailabilityTab() {
   const { t } = useLanguage();
-  const DAYS = t.availability.days;
 
   const [schedule, setSchedule] = useState<DaySlot[]>(Array(7).fill(null).map(defaultSlot));
   const [loading, setLoading] = useState(true);
@@ -84,7 +83,7 @@ export function AvailabilityTab() {
       </div>
 
       <div className="space-y-3">
-        {DAYS.map((day, i) => {
+        {t.availability.days.map((day, i) => {
           const d = schedule[i];
           return (
             <div
@@ -100,8 +99,8 @@ export function AvailabilityTab() {
                 }`}
               >
                 <span
-                  className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${
-                    d.enabled ? 'translate-x-5' : 'translate-x-1'
+                  className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all duration-200 ${
+                    d.enabled ? 'left-5' : 'left-1'
                   }`}
                 />
               </button>

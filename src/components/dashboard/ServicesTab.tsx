@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../lib/api';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface Service {
   id: string;
@@ -20,6 +21,7 @@ interface ServiceFormData {
 const empty: ServiceFormData = { name: '', description: '', durationMinutes: 60, price: '0' };
 
 export function ServicesTab() {
+  const { t } = useLanguage();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState<ServiceFormData>(empty);
@@ -60,7 +62,7 @@ export function ServicesTab() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Remove this service?')) return;
+    if (!confirm(t.services.removeConfirm)) return;
     await api.delete(`/services/${id}`);
     await fetchServices();
   };
@@ -71,18 +73,18 @@ export function ServicesTab() {
     setShowForm(false);
   };
 
-  if (loading) return <div className="text-ink-400 font-mono text-sm animate-pulse">Loading services…</div>;
+  if (loading) return <div className="text-ink-400 font-mono text-sm animate-pulse">{t.loading}</div>;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-display text-2xl text-ink-100">Services</h2>
-          <p className="text-ink-400 text-sm mt-1">Define what you offer and how long each takes.</p>
+          <h2 className="font-display text-2xl text-ink-100">{t.services.title}</h2>
+          <p className="text-ink-400 text-sm mt-1">{t.services.subtitle}</p>
         </div>
         {!showForm && (
           <button onClick={() => setShowForm(true)} className="btn-primary">
-            + Add service
+            {t.services.add}
           </button>
         )}
       </div>
@@ -91,31 +93,31 @@ export function ServicesTab() {
       {showForm && (
         <div className="card border-amber-500/30 animate-fade-up">
           <h3 className="font-display text-lg text-ink-100 mb-4">
-            {editing ? 'Edit service' : 'New service'}
+            {editing ? t.services.editTitle : t.services.newTitle}
           </h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
-                <label className="label">Service name</label>
+                <label className="label">{t.services.nameLabel}</label>
                 <input
                   className="input-field"
-                  placeholder="Haircut & Styling"
+                  placeholder={t.services.namePlaceholder}
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   required
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="label">Description (optional)</label>
+                <label className="label">{t.services.descLabel}</label>
                 <textarea
                   className="input-field resize-none h-20"
-                  placeholder="A short description for your clients…"
+                  placeholder={t.services.descPlaceholder}
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                 />
               </div>
               <div>
-                <label className="label">Duration (minutes)</label>
+                <label className="label">{t.services.durationLabel}</label>
                 <select
                   className="input-field"
                   value={form.durationMinutes}
@@ -127,7 +129,7 @@ export function ServicesTab() {
                 </select>
               </div>
               <div>
-                <label className="label">Price (€)</label>
+                <label className="label">{t.services.priceLabel}</label>
                 <input
                   className="input-field"
                   placeholder="25.00"
@@ -140,10 +142,10 @@ export function ServicesTab() {
             </div>
             <div className="flex gap-3 pt-2">
               <button type="submit" disabled={saving} className="btn-primary">
-                {saving ? 'Saving…' : editing ? 'Save changes' : 'Create service'}
+                {saving ? t.services.saving : editing ? t.services.saveChanges : t.services.create}
               </button>
               <button type="button" onClick={handleCancel} className="btn-ghost">
-                Cancel
+                {t.services.cancel}
               </button>
             </div>
           </form>
@@ -153,8 +155,8 @@ export function ServicesTab() {
       {/* List */}
       {services.length === 0 && !showForm ? (
         <div className="card text-center py-12">
-          <p className="font-display text-xl text-ink-400 mb-2">No services yet</p>
-          <p className="text-ink-500 text-sm">Add your first service to start accepting bookings.</p>
+          <p className="font-display text-xl text-ink-400 mb-2">{t.services.empty}</p>
+          <p className="text-ink-500 text-sm">{t.services.emptyHint}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -175,13 +177,13 @@ export function ServicesTab() {
                 <span className="font-display text-lg text-amber-500">€{parseFloat(service.price).toFixed(2)}</span>
                 <div className="flex gap-2">
                   <button onClick={() => handleEdit(service)} className="btn-ghost text-xs py-1.5 px-3">
-                    Edit
+                    {t.services.edit}
                   </button>
                   <button
                     onClick={() => handleDelete(service.id)}
                     className="btn-ghost text-xs py-1.5 px-3 text-red-400 hover:text-red-300 hover:border-red-800"
                   >
-                    Remove
+                    {t.services.remove}
                   </button>
                 </div>
               </div>

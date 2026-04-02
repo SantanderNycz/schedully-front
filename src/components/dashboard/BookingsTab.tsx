@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../lib/api';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface Booking {
   id: string;
@@ -21,6 +22,7 @@ const STATUS_STYLES = {
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export function BookingsTab() {
+  const { t } = useLanguage();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'cancelled'>('all');
@@ -47,14 +49,27 @@ export function BookingsTab() {
     cancelled: bookings.filter((b) => b.status === 'cancelled').length,
   };
 
-  if (loading) return <div className="text-ink-400 font-mono text-sm animate-pulse">Loading bookings…</div>;
+  const filterLabels = {
+    all: t.bookings.all,
+    pending: t.bookings.pending,
+    confirmed: t.bookings.confirmed,
+    cancelled: t.bookings.cancelled,
+  };
+
+  const statusLabels = {
+    pending: t.bookings.pending,
+    confirmed: t.bookings.confirmed,
+    cancelled: t.bookings.cancelled,
+  };
+
+  if (loading) return <div className="text-ink-400 font-mono text-sm animate-pulse">{t.loading}</div>;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h2 className="font-display text-2xl text-ink-100">Bookings</h2>
-          <p className="text-ink-400 text-sm mt-1">All client appointments for your business.</p>
+          <h2 className="font-display text-2xl text-ink-100">{t.bookings.title}</h2>
+          <p className="text-ink-400 text-sm mt-1">{t.bookings.subtitle}</p>
         </div>
 
         {/* Filter tabs */}
@@ -63,13 +78,13 @@ export function BookingsTab() {
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors capitalize ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                 filter === f
                   ? 'bg-ink-600 text-ink-100'
                   : 'text-ink-400 hover:text-ink-200'
               }`}
             >
-              {f} <span className="ml-1 font-mono text-ink-500">{counts[f]}</span>
+              {filterLabels[f]} <span className="ml-1 font-mono text-ink-500">{counts[f]}</span>
             </button>
           ))}
         </div>
@@ -77,8 +92,8 @@ export function BookingsTab() {
 
       {filtered.length === 0 ? (
         <div className="card text-center py-12">
-          <p className="font-display text-xl text-ink-400 mb-2">No bookings yet</p>
-          <p className="text-ink-500 text-sm">Share your booking link to start receiving appointments.</p>
+          <p className="font-display text-xl text-ink-400 mb-2">{t.bookings.empty}</p>
+          <p className="text-ink-500 text-sm">{t.bookings.emptyHint}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -98,7 +113,7 @@ export function BookingsTab() {
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <span className="font-medium text-ink-100">{booking.client.name}</span>
                     <span className={`text-xs px-2 py-0.5 rounded-full border font-mono ${STATUS_STYLES[booking.status]}`}>
-                      {booking.status}
+                      {statusLabels[booking.status]}
                     </span>
                   </div>
                   <p className="text-ink-400 text-sm">
@@ -121,13 +136,13 @@ export function BookingsTab() {
                         onClick={() => updateStatus(booking.id, 'confirmed')}
                         className="text-xs px-3 py-1.5 rounded-md bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20 transition-colors"
                       >
-                        Confirm
+                        {t.bookings.confirm}
                       </button>
                       <button
                         onClick={() => updateStatus(booking.id, 'cancelled')}
                         className="text-xs px-3 py-1.5 rounded-md bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors"
                       >
-                        Cancel
+                        {t.bookings.cancel}
                       </button>
                     </div>
                   )}
