@@ -43,6 +43,7 @@ export function DashboardPage() {
   const [editingName, setEditingName] = useState(false);
   const [nameInput, setNameInput] = useState('');
   const [nameSaving, setNameSaving] = useState(false);
+  const [nameError, setNameError] = useState('');
   const nameInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -75,14 +76,20 @@ export function DashboardPage() {
     const trimmed = nameInput.trim();
     if (!trimmed || trimmed === business?.name) {
       setEditingName(false);
+      setNameError('');
       return;
     }
     setNameSaving(true);
+    setNameError('');
     try {
       await updateBusiness(trimmed);
+      setEditingName(false);
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { error?: string } } })
+        ?.response?.data?.error ?? 'Failed to save.';
+      setNameError(msg);
     } finally {
       setNameSaving(false);
-      setEditingName(false);
     }
   }, [nameInput, business?.name, updateBusiness]);
 
@@ -107,19 +114,22 @@ export function DashboardPage() {
               <>
                 <span className="text-ink-600">|</span>
                 {editingName ? (
-                  <input
-                    ref={nameInputRef}
-                    value={nameInput}
-                    onChange={(e) => setNameInput(e.target.value)}
-                    onBlur={saveName}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') saveName();
-                      if (e.key === 'Escape') setEditingName(false);
-                    }}
-                    disabled={nameSaving}
-                    className="bg-transparent border-b border-ink-500 text-ink-100 text-sm outline-none w-40 px-0.5"
-                    autoFocus
-                  />
+                  <div className="flex flex-col">
+                    <input
+                      ref={nameInputRef}
+                      value={nameInput}
+                      onChange={(e) => { setNameInput(e.target.value); setNameError(''); }}
+                      onBlur={saveName}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') saveName();
+                        if (e.key === 'Escape') { setEditingName(false); setNameError(''); }
+                      }}
+                      disabled={nameSaving}
+                      className={`bg-transparent border-b text-ink-100 text-sm outline-none w-40 px-0.5 ${nameError ? 'border-red-500' : 'border-ink-500'}`}
+                      autoFocus
+                    />
+                    {nameError && <span className="text-red-400 text-xs mt-0.5">{nameError}</span>}
+                  </div>
                 ) : (
                   <button
                     type="button"
