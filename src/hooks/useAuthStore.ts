@@ -26,6 +26,7 @@ interface AuthState {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   fetchMe: () => Promise<void>;
+  updateBusiness: (name: string) => Promise<void>;
 }
 
 interface RegisterOwnerData {
@@ -72,6 +73,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     localStorage.removeItem('token');
     set({ user: null, business: null, token: null });
+  },
+
+  updateBusiness: async (name: string) => {
+    const res = await api.patch('/businesses/me', { name });
+    set({ business: res.data.business });
   },
 
   fetchMe: async () => {

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../hooks/useAuthStore';
 import { ServicesTab } from '../components/dashboard/ServicesTab';
@@ -34,12 +34,16 @@ function TranslateIcon() {
 }
 
 export function DashboardPage() {
-  const { user, business, logout, fetchMe, isLoading } = useAuthStore();
+  const { user, business, logout, fetchMe, isLoading, updateBusiness } = useAuthStore();
   const navigate = useNavigate();
   const { t, language, setLanguage } = useLanguage();
   const [tab, setTab] = useState<OwnerTab>('bookings');
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
+  const [editingName, setEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState('');
+  const [nameSaving, setNameSaving] = useState(false);
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!user) fetchMe();
@@ -61,6 +65,27 @@ export function DashboardPage() {
     navigate('/login');
   };
 
+  const startEditName = () => {
+    setNameInput(business?.name ?? '');
+    setEditingName(true);
+    setTimeout(() => nameInputRef.current?.select(), 0);
+  };
+
+  const saveName = useCallback(async () => {
+    const trimmed = nameInput.trim();
+    if (!trimmed || trimmed === business?.name) {
+      setEditingName(false);
+      return;
+    }
+    setNameSaving(true);
+    try {
+      await updateBusiness(trimmed);
+    } finally {
+      setNameSaving(false);
+      setEditingName(false);
+    }
+  }, [nameInput, business?.name, updateBusiness]);
+
   if (isLoading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -81,7 +106,34 @@ export function DashboardPage() {
             {business && (
               <>
                 <span className="text-ink-600">|</span>
-                <span className="text-ink-300 text-sm">{business.name}</span>
+                {editingName ? (
+                  <input
+                    ref={nameInputRef}
+                    value={nameInput}
+                    onChange={(e) => setNameInput(e.target.value)}
+                    onBlur={saveName}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') saveName();
+                      if (e.key === 'Escape') setEditingName(false);
+                    }}
+                    disabled={nameSaving}
+                    className="bg-transparent border-b border-ink-500 text-ink-100 text-sm outline-none w-40 px-0.5"
+                    autoFocus
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={startEditName}
+                    className="text-ink-300 text-sm hover:text-ink-100 transition-colors group flex items-center gap-1"
+                    title="Edit business name"
+                  >
+                    {business.name}
+                    <svg className="opacity-0 group-hover:opacity-100 transition-opacity" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z" />
+                    </svg>
+                  </button>
+                )}
                 <span className="font-mono text-xs bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-full border border-amber-500/20">
                   {business.plan}
                 </span>

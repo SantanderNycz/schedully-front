@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../hooks/useAuthStore';
+import { useLanguage, languageNames, Language } from '../contexts/LanguageContext';
 
 const schema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -12,10 +13,23 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
+function TranslateIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" />
+      <path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" />
+    </svg>
+  );
+}
+
 export function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuthStore();
+  const { t, language, setLanguage } = useLanguage();
   const [serverError, setServerError] = useState('');
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -59,15 +73,47 @@ export function LoginPage() {
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm animate-fade-up">
 
+          {/* Language selector */}
+          <div className="flex justify-end mb-6" ref={langRef}>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setLangOpen((o) => !o)}
+                className="btn-ghost text-xs flex items-center gap-1.5 px-2"
+                title="Language / Idioma"
+              >
+                <TranslateIcon />
+              </button>
+              {langOpen && (
+                <div className="absolute right-0 top-full mt-1 bg-ink-800 border border-ink-700 rounded-xl shadow-xl py-1 z-50 min-w-[140px] animate-fade-in">
+                  {(Object.entries(languageNames) as [Language, string][]).map(([code, name]) => (
+                    <button
+                      key={code}
+                      type="button"
+                      onClick={() => { setLanguage(code); setLangOpen(false); }}
+                      className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                        language === code
+                          ? 'text-amber-500 bg-amber-500/5'
+                          : 'text-ink-300 hover:text-ink-100 hover:bg-ink-700'
+                      }`}
+                    >
+                      {name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className="mb-8">
             <span className="lg:hidden font-display text-2xl text-amber-500 italic block mb-8">Schedully</span>
-            <h1 className="font-display text-3xl text-ink-100 mb-2">Welcome back</h1>
-            <p className="text-ink-400 text-sm">Sign in to your account</p>
+            <h1 className="font-display text-3xl text-ink-100 mb-2">{t.login.title}</h1>
+            <p className="text-ink-400 text-sm">{t.login.subtitle}</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="label">Email</label>
+              <label className="label">{t.login.emailLabel}</label>
               <input
                 {...register('email')}
                 type="email"
@@ -79,7 +125,7 @@ export function LoginPage() {
             </div>
 
             <div>
-              <label className="label">Password</label>
+              <label className="label">{t.login.passwordLabel}</label>
               <input
                 {...register('password')}
                 type="password"
@@ -99,23 +145,23 @@ export function LoginPage() {
             <button type="submit" disabled={isSubmitting} className="btn-primary w-full mt-2">
               {isSubmitting ? (
                 <span className="flex items-center gap-2">
-                  <Spinner /> Signing in…
+                  <Spinner /> {t.login.submitting}
                 </span>
-              ) : 'Sign in'}
+              ) : t.login.submit}
             </button>
           </form>
 
           <div className="mt-8 pt-6 border-t border-ink-700 text-center space-y-2">
             <p className="text-ink-400 text-sm">
-              Own a business?{' '}
+              {t.login.ownBusiness}{' '}
               <Link to="/register/owner" className="text-amber-500 hover:text-amber-400 transition-colors">
-                Create your account →
+                {t.login.createAccount}
               </Link>
             </p>
             <p className="text-ink-400 text-sm">
-              Looking to book?{' '}
+              {t.login.lookingToBook}{' '}
               <Link to="/register/client" className="text-amber-500 hover:text-amber-400 transition-colors">
-                Sign up as a client →
+                {t.login.signUpClient}
               </Link>
             </p>
           </div>

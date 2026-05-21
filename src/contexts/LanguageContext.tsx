@@ -121,6 +121,18 @@ const translations = {
       hi: 'Hi,',
       upcomingBookings: 'Your upcoming and past bookings.',
     },
+    login: {
+      title: 'Welcome back',
+      subtitle: 'Sign in to your account',
+      emailLabel: 'Email',
+      passwordLabel: 'Password',
+      submit: 'Sign in',
+      submitting: 'Signing in…',
+      ownBusiness: 'Own a business?',
+      createAccount: 'Create your account →',
+      lookingToBook: 'Looking to book?',
+      signUpClient: 'Sign up as a client →',
+    },
   },
 
   pt: {
@@ -232,6 +244,18 @@ const translations = {
     client: {
       hi: 'Olá,',
       upcomingBookings: 'Os seus agendamentos futuros e passados.',
+    },
+    login: {
+      title: 'Bem-vindo de volta',
+      subtitle: 'Inicie sessão na sua conta',
+      emailLabel: 'Email',
+      passwordLabel: 'Palavra-passe',
+      submit: 'Entrar',
+      submitting: 'A entrar…',
+      ownBusiness: 'Tem um negócio?',
+      createAccount: 'Crie a sua conta →',
+      lookingToBook: 'Quer agendar?',
+      signUpClient: 'Registe-se como cliente →',
     },
   },
 
@@ -345,6 +369,18 @@ const translations = {
       hi: 'Bonjour,',
       upcomingBookings: 'Vos réservations à venir et passées.',
     },
+    login: {
+      title: 'Bon retour',
+      subtitle: 'Connectez-vous à votre compte',
+      emailLabel: 'E-mail',
+      passwordLabel: 'Mot de passe',
+      submit: 'Se connecter',
+      submitting: 'Connexion…',
+      ownBusiness: 'Vous avez une entreprise ?',
+      createAccount: 'Créez votre compte →',
+      lookingToBook: 'Vous souhaitez réserver ?',
+      signUpClient: "S'inscrire en tant que client →",
+    },
   },
 
   es: {
@@ -457,6 +493,18 @@ const translations = {
       hi: 'Hola,',
       upcomingBookings: 'Sus próximas reservas y las pasadas.',
     },
+    login: {
+      title: 'Bienvenido de nuevo',
+      subtitle: 'Inicia sesión en tu cuenta',
+      emailLabel: 'Correo electrónico',
+      passwordLabel: 'Contraseña',
+      submit: 'Iniciar sesión',
+      submitting: 'Iniciando sesión…',
+      ownBusiness: '¿Tienes un negocio?',
+      createAccount: 'Crea tu cuenta →',
+      lookingToBook: '¿Buscas reservar?',
+      signUpClient: 'Regístrate como cliente →',
+    },
   },
 
   zh: {
@@ -568,6 +616,18 @@ const translations = {
     client: {
       hi: '你好，',
       upcomingBookings: '您即将到来的和过去的预约。',
+    },
+    login: {
+      title: '欢迎回来',
+      subtitle: '登录您的账户',
+      emailLabel: '邮箱',
+      passwordLabel: '密码',
+      submit: '登录',
+      submitting: '登录中…',
+      ownBusiness: '您有一家企业？',
+      createAccount: '创建您的账户 →',
+      lookingToBook: '想要预约？',
+      signUpClient: '注册为客户 →',
     },
   },
 };
