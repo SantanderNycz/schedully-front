@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../hooks/useAuthStore';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const schema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -16,6 +17,8 @@ type FormData = z.infer<typeof schema>;
 export function RegisterClientPage() {
   const navigate = useNavigate();
   const { loginClient } = useAuthStore();
+  const { t } = useLanguage();
+  const tr = t.registerClient;
   const [serverError, setServerError] = useState('');
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
@@ -40,13 +43,13 @@ export function RegisterClientPage() {
 
         <div className="mb-8">
           <Link to="/" className="font-display text-xl text-amber-500 italic block mb-8">Schedully</Link>
-          <h1 className="font-display text-3xl text-ink-100 mb-2">Create your account</h1>
-          <p className="text-ink-400 text-sm">Start booking appointments with your favourite businesses.</p>
+          <h1 className="font-display text-3xl text-ink-100 mb-2">{tr.title}</h1>
+          <p className="text-ink-400 text-sm">{tr.subtitle}</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="label">Full name</label>
+            <label className="label">{tr.nameLabel}</label>
             <input
               {...register('name')}
               placeholder="João Ferreira"
@@ -56,7 +59,7 @@ export function RegisterClientPage() {
           </div>
 
           <div>
-            <label className="label">Email</label>
+            <label className="label">{tr.emailLabel}</label>
             <input
               {...register('email')}
               type="email"
@@ -67,11 +70,11 @@ export function RegisterClientPage() {
           </div>
 
           <div>
-            <label className="label">Password</label>
+            <label className="label">{tr.passwordLabel}</label>
             <input
               {...register('password')}
               type="password"
-              placeholder="At least 8 characters"
+              placeholder={tr.passwordPlaceholder}
               className="input-field"
             />
             {errors.password && <p className="mt-1 text-xs text-red-400">{errors.password.message}</p>}
@@ -84,21 +87,21 @@ export function RegisterClientPage() {
           )}
 
           <button type="submit" disabled={isSubmitting} className="btn-primary w-full">
-            {isSubmitting ? 'Creating account…' : 'Get started →'}
+            {isSubmitting ? tr.submitting : tr.submit}
           </button>
         </form>
 
         <p className="mt-6 text-center text-ink-400 text-sm">
-          Already have an account?{' '}
+          {tr.alreadyHaveAccount}{' '}
           <Link to="/login" className="text-amber-500 hover:text-amber-400 transition-colors">
-            Sign in
+            {tr.signIn}
           </Link>
         </p>
 
         <p className="mt-2 text-center text-ink-500 text-sm">
-          Own a business?{' '}
+          {tr.ownBusiness}{' '}
           <Link to="/register/owner" className="text-ink-400 hover:text-ink-200 transition-colors">
-            Create a business account
+            {tr.createBusiness}
           </Link>
         </p>
       </div>

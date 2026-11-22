@@ -31,9 +31,17 @@ function getDatesForNextDays(n: number): string[] {
   return dates;
 }
 
-function formatDate(dateStr: string): string {
+const LANGUAGE_LOCALES: Record<Language, string> = {
+  en: 'en-GB',
+  pt: 'pt-PT',
+  fr: 'fr-FR',
+  es: 'es-ES',
+  zh: 'zh-CN',
+};
+
+function formatDate(dateStr: string, locale: string): string {
   const d = new Date(dateStr + 'T12:00:00');
-  return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long' });
+  return d.toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'long' });
 }
 
 function TranslateIcon() {
@@ -64,10 +72,12 @@ export function BookingPage() {
   const navigate = useNavigate();
   const { user, token } = useAuthStore();
   const { t, language, setLanguage } = useLanguage();
+  const locale = LANGUAGE_LOCALES[language];
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
 
   const [business, setBusiness] = useState<Business | null>(null);
+  const [loadError, setLoadError] = useState(false);
   const [services, setServices] = useState<Service[]>([]);
   const [step, setStep] = useState<Step>('service');
 
@@ -96,10 +106,14 @@ export function BookingPage() {
   // Load business + services
   useEffect(() => {
     if (!slug) return;
-    api.get(`/services/public/${slug}`).then((res) => {
-      setBusiness(res.data.business);
-      setServices(res.data.services);
-    });
+    setLoadError(false);
+    api
+      .get(`/services/public/${slug}`)
+      .then((res) => {
+        setBusiness(res.data.business);
+        setServices(res.data.services);
+      })
+      .catch(() => setLoadError(true));
   }, [slug]);
 
   // Load slots when date + service selected
@@ -158,6 +172,17 @@ export function BookingPage() {
       setSubmitting(false);
     }
   };
+
+  if (loadError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6">
+        <div className="card text-center max-w-sm">
+          <p className="font-display text-2xl text-ink-300 mb-2">{t.booking.notFound}</p>
+          <p className="text-ink-500 text-sm">{t.booking.notFoundHint}</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!business) {
     return (
@@ -285,9 +310,9 @@ export function BookingPage() {
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
               {dates.map((date, idx) => {
                 const d = new Date(date + 'T12:00:00');
-                const dayName = d.toLocaleString('default', { weekday: 'short' });
+                const dayName = d.toLocaleString(locale, { weekday: 'short' });
                 const dayNum = d.getDate();
-                const month = d.toLocaleString('default', { month: 'short' });
+                const month = d.toLocaleString(locale, { month: 'short' });
                 return (
                   <button
                     key={date}
@@ -323,7 +348,7 @@ export function BookingPage() {
 
             <div className="card mb-4">
               <p className="text-ink-300 text-sm">
-                {selectedService.name} · {formatDate(selectedDate)}
+                {selectedService.name} · {formatDate(selectedDate, locale)}
               </p>
             </div>
 
@@ -371,7 +396,7 @@ export function BookingPage() {
             {/* Summary */}
             <div className="card mb-4 space-y-3">
               <Row label={t.booking.service} value={selectedService.name} />
-              <Row label={t.booking.date} value={formatDate(selectedDate)} />
+              <Row label={t.booking.date} value={formatDate(selectedDate, locale)} />
               <Row label={t.booking.time} value={selectedSlot} />
               <Row
                 label={t.booking.duration}
@@ -431,7 +456,7 @@ export function BookingPage() {
             </div>
             <h2 className="font-display text-3xl text-ink-100 mb-2">{t.booking.allBooked}</h2>
             <p className="text-ink-400 text-sm mb-2">
-              {selectedService?.name} · {formatDate(selectedDate)} at {selectedSlot}
+              {selectedService?.name} · {formatDate(selectedDate, locale)} at {selectedSlot}
             </p>
             <p className="text-ink-500 text-xs mb-8">{t.booking.bookedSoon}</p>
             <div className="flex gap-3 justify-center">

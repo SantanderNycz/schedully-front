@@ -15,6 +15,7 @@ const translations = {
     loading: 'Loading…',
     viewBookingPage: '↗ View booking page',
     signOut: 'Sign out',
+    renameUrlHint: 'Changing the name also updates your public URL.',
     tabs: {
       bookings: 'Bookings',
       services: 'Services',
@@ -116,6 +117,8 @@ const translations = {
       bookAgain: 'Book again',
       viewMyBookings: 'View my bookings →',
       bookedSoon: 'The business will confirm your appointment shortly.',
+      notFound: 'Business not found',
+      notFoundHint: "This booking link doesn't exist or has been removed.",
     },
     client: {
       hi: 'Hi,',
@@ -133,12 +136,42 @@ const translations = {
       lookingToBook: 'Looking to book?',
       signUpClient: 'Sign up as a client →',
     },
+    registerOwner: {
+      title: 'Set up your business',
+      subtitle: 'Create your account and start accepting bookings today.',
+      nameLabel: 'Your name',
+      emailLabel: 'Email',
+      passwordLabel: 'Password',
+      passwordPlaceholder: 'At least 8 characters',
+      businessSection: 'Business details',
+      businessNameLabel: 'Business name',
+      urlLabel: 'Public URL',
+      submit: 'Create business account →',
+      submitting: 'Creating account…',
+      alreadyHaveAccount: 'Already have an account?',
+      signIn: 'Sign in',
+    },
+    registerClient: {
+      title: 'Create your account',
+      subtitle: 'Start booking appointments with your favourite businesses.',
+      nameLabel: 'Full name',
+      emailLabel: 'Email',
+      passwordLabel: 'Password',
+      passwordPlaceholder: 'At least 8 characters',
+      submit: 'Get started →',
+      submitting: 'Creating account…',
+      alreadyHaveAccount: 'Already have an account?',
+      signIn: 'Sign in',
+      ownBusiness: 'Own a business?',
+      createBusiness: 'Create a business account',
+    },
   },
 
   pt: {
     loading: 'A carregar…',
     viewBookingPage: '↗ Ver página de agendamento',
     signOut: 'Sair',
+    renameUrlHint: 'Alterar o nome também atualiza o seu URL público.',
     tabs: {
       bookings: 'Agendamentos',
       services: 'Serviços',
@@ -240,6 +273,8 @@ const translations = {
       bookAgain: 'Agendar novamente',
       viewMyBookings: 'Ver os meus agendamentos →',
       bookedSoon: 'O negócio irá confirmar o seu agendamento em breve.',
+      notFound: 'Negócio não encontrado',
+      notFoundHint: 'Este link de agendamento não existe ou foi removido.',
     },
     client: {
       hi: 'Olá,',
@@ -257,12 +292,42 @@ const translations = {
       lookingToBook: 'Quer agendar?',
       signUpClient: 'Registe-se como cliente →',
     },
+    registerOwner: {
+      title: 'Configure o seu negócio',
+      subtitle: 'Crie a sua conta e comece a aceitar agendamentos hoje.',
+      nameLabel: 'O seu nome',
+      emailLabel: 'Email',
+      passwordLabel: 'Palavra-passe',
+      passwordPlaceholder: 'Pelo menos 8 caracteres',
+      businessSection: 'Detalhes do negócio',
+      businessNameLabel: 'Nome do negócio',
+      urlLabel: 'URL público',
+      submit: 'Criar conta de negócio →',
+      submitting: 'A criar conta…',
+      alreadyHaveAccount: 'Já tem uma conta?',
+      signIn: 'Iniciar sessão',
+    },
+    registerClient: {
+      title: 'Criar a sua conta',
+      subtitle: 'Comece a agendar com os seus negócios favoritos.',
+      nameLabel: 'Nome completo',
+      emailLabel: 'Email',
+      passwordLabel: 'Palavra-passe',
+      passwordPlaceholder: 'Pelo menos 8 caracteres',
+      submit: 'Começar →',
+      submitting: 'A criar conta…',
+      alreadyHaveAccount: 'Já tem uma conta?',
+      signIn: 'Iniciar sessão',
+      ownBusiness: 'Tem um negócio?',
+      createBusiness: 'Criar uma conta de negócio',
+    },
   },
 
   fr: {
     loading: 'Chargement…',
     viewBookingPage: '↗ Voir la page de réservation',
     signOut: 'Se déconnecter',
+    renameUrlHint: 'Changer le nom met aussi à jour votre URL public.',
     tabs: {
       bookings: 'Réservations',
       services: 'Services',
@@ -364,6 +429,8 @@ const translations = {
       bookAgain: 'Réserver à nouveau',
       viewMyBookings: 'Voir mes réservations →',
       bookedSoon: "L'entreprise confirmera votre rendez-vous prochainement.",
+      notFound: 'Entreprise introuvable',
+      notFoundHint: "Ce lien de réservation n'existe pas ou a été supprimé.",
     },
     client: {
       hi: 'Bonjour,',
@@ -381,12 +448,42 @@ const translations = {
       lookingToBook: 'Vous souhaitez réserver ?',
       signUpClient: "S'inscrire en tant que client →",
     },
+    registerOwner: {
+      title: 'Configurer votre entreprise',
+      subtitle: "Créez votre compte et commencez à accepter des réservations dès aujourd'hui.",
+      nameLabel: 'Votre nom',
+      emailLabel: 'E-mail',
+      passwordLabel: 'Mot de passe',
+      passwordPlaceholder: 'Au moins 8 caractères',
+      businessSection: "Détails de l'entreprise",
+      businessNameLabel: "Nom de l'entreprise",
+      urlLabel: 'URL public',
+      submit: 'Créer un compte entreprise →',
+      submitting: 'Création du compte…',
+      alreadyHaveAccount: 'Vous avez déjà un compte ?',
+      signIn: 'Se connecter',
+    },
+    registerClient: {
+      title: 'Créer votre compte',
+      subtitle: 'Commencez à réserver avec vos entreprises préférées.',
+      nameLabel: 'Nom complet',
+      emailLabel: 'E-mail',
+      passwordLabel: 'Mot de passe',
+      passwordPlaceholder: 'Au moins 8 caractères',
+      submit: 'Commencer →',
+      submitting: 'Création du compte…',
+      alreadyHaveAccount: 'Vous avez déjà un compte ?',
+      signIn: 'Se connecter',
+      ownBusiness: 'Vous avez une entreprise ?',
+      createBusiness: 'Créer un compte entreprise',
+    },
   },
 
   es: {
     loading: 'Cargando…',
     viewBookingPage: '↗ Ver página de reservas',
     signOut: 'Cerrar sesión',
+    renameUrlHint: 'Cambiar el nombre también actualiza tu URL pública.',
     tabs: {
       bookings: 'Reservas',
       services: 'Servicios',
@@ -488,6 +585,8 @@ const translations = {
       bookAgain: 'Reservar de nuevo',
       viewMyBookings: 'Ver mis reservas →',
       bookedSoon: 'El negocio confirmará su cita en breve.',
+      notFound: 'Negocio no encontrado',
+      notFoundHint: 'Este enlace de reserva no existe o ha sido eliminado.',
     },
     client: {
       hi: 'Hola,',
@@ -505,12 +604,42 @@ const translations = {
       lookingToBook: '¿Buscas reservar?',
       signUpClient: 'Regístrate como cliente →',
     },
+    registerOwner: {
+      title: 'Configura tu negocio',
+      subtitle: 'Crea tu cuenta y empieza a aceptar reservas hoy.',
+      nameLabel: 'Tu nombre',
+      emailLabel: 'Correo electrónico',
+      passwordLabel: 'Contraseña',
+      passwordPlaceholder: 'Al menos 8 caracteres',
+      businessSection: 'Detalles del negocio',
+      businessNameLabel: 'Nombre del negocio',
+      urlLabel: 'URL pública',
+      submit: 'Crear cuenta de negocio →',
+      submitting: 'Creando cuenta…',
+      alreadyHaveAccount: '¿Ya tienes una cuenta?',
+      signIn: 'Iniciar sesión',
+    },
+    registerClient: {
+      title: 'Crear tu cuenta',
+      subtitle: 'Empieza a reservar con tus negocios favoritos.',
+      nameLabel: 'Nombre completo',
+      emailLabel: 'Correo electrónico',
+      passwordLabel: 'Contraseña',
+      passwordPlaceholder: 'Al menos 8 caracteres',
+      submit: 'Empezar →',
+      submitting: 'Creando cuenta…',
+      alreadyHaveAccount: '¿Ya tienes una cuenta?',
+      signIn: 'Iniciar sesión',
+      ownBusiness: '¿Tienes un negocio?',
+      createBusiness: 'Crear una cuenta de negocio',
+    },
   },
 
   zh: {
     loading: '加载中…',
     viewBookingPage: '↗ 查看预约页面',
     signOut: '退出登录',
+    renameUrlHint: '更改名称也会更新您的公开链接。',
     tabs: {
       bookings: '预约',
       services: '服务',
@@ -612,6 +741,8 @@ const translations = {
       bookAgain: '再次预约',
       viewMyBookings: '查看我的预约 →',
       bookedSoon: '商家将很快确认您的预约。',
+      notFound: '未找到商家',
+      notFoundHint: '此预约链接不存在或已被移除。',
     },
     client: {
       hi: '你好，',
@@ -628,6 +759,35 @@ const translations = {
       createAccount: '创建您的账户 →',
       lookingToBook: '想要预约？',
       signUpClient: '注册为客户 →',
+    },
+    registerOwner: {
+      title: '设置您的商家',
+      subtitle: '创建账户，立即开始接受预约。',
+      nameLabel: '您的姓名',
+      emailLabel: '邮箱',
+      passwordLabel: '密码',
+      passwordPlaceholder: '至少 8 个字符',
+      businessSection: '商家信息',
+      businessNameLabel: '商家名称',
+      urlLabel: '公开链接',
+      submit: '创建商家账户 →',
+      submitting: '创建中…',
+      alreadyHaveAccount: '已有账户？',
+      signIn: '登录',
+    },
+    registerClient: {
+      title: '创建您的账户',
+      subtitle: '开始预约您喜欢的商家服务。',
+      nameLabel: '全名',
+      emailLabel: '邮箱',
+      passwordLabel: '密码',
+      passwordPlaceholder: '至少 8 个字符',
+      submit: '开始 →',
+      submitting: '创建中…',
+      alreadyHaveAccount: '已有账户？',
+      signIn: '登录',
+      ownBusiness: '您有一家商家？',
+      createBusiness: '创建商家账户',
     },
   },
 };
@@ -646,8 +806,22 @@ const LanguageContext = createContext<LanguageContextType>({
   t: translations.en,
 });
 
+const STORAGE_KEY = 'schedully-lang';
+
+function getInitialLanguage(): Language {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored && stored in languageNames) return stored as Language;
+  return 'en';
+}
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguageState] = useState<Language>(getInitialLanguage);
+
+  const setLanguage = (lang: Language) => {
+    localStorage.setItem(STORAGE_KEY, lang);
+    setLanguageState(lang);
+  };
+
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t: translations[language] }}>
       {children}

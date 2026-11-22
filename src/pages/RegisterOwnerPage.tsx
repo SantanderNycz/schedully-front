@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../hooks/useAuthStore';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const schema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -22,6 +23,8 @@ type FormData = z.infer<typeof schema>;
 export function RegisterOwnerPage() {
   const navigate = useNavigate();
   const { loginOwner } = useAuthStore();
+  const { t } = useLanguage();
+  const tr = t.registerOwner;
   const [serverError, setServerError] = useState('');
 
   const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<FormData>({
@@ -58,14 +61,14 @@ export function RegisterOwnerPage() {
 
         <div className="mb-8">
           <Link to="/" className="font-display text-xl text-amber-500 italic block mb-8">Schedully</Link>
-          <h1 className="font-display text-3xl text-ink-100 mb-2">Set up your business</h1>
-          <p className="text-ink-400 text-sm">Create your account and start accepting bookings today.</p>
+          <h1 className="font-display text-3xl text-ink-100 mb-2">{tr.title}</h1>
+          <p className="text-ink-400 text-sm">{tr.subtitle}</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className="label">Your name</label>
+              <label className="label">{tr.nameLabel}</label>
               <input
                 {...register('name')}
                 placeholder="Ana Silva"
@@ -75,7 +78,7 @@ export function RegisterOwnerPage() {
             </div>
 
             <div className="col-span-2">
-              <label className="label">Email</label>
+              <label className="label">{tr.emailLabel}</label>
               <input
                 {...register('email')}
                 type="email"
@@ -86,11 +89,11 @@ export function RegisterOwnerPage() {
             </div>
 
             <div className="col-span-2">
-              <label className="label">Password</label>
+              <label className="label">{tr.passwordLabel}</label>
               <input
                 {...register('password')}
                 type="password"
-                placeholder="At least 8 characters"
+                placeholder={tr.passwordPlaceholder}
                 className="input-field"
               />
               {errors.password && <p className="mt-1 text-xs text-red-400">{errors.password.message}</p>}
@@ -98,10 +101,10 @@ export function RegisterOwnerPage() {
           </div>
 
           <div className="border-t border-ink-700 pt-4 space-y-4">
-            <p className="text-xs text-ink-500 uppercase tracking-widest font-mono">Business details</p>
+            <p className="text-xs text-ink-500 uppercase tracking-widest font-mono">{tr.businessSection}</p>
 
             <div>
-              <label className="label">Business name</label>
+              <label className="label">{tr.businessNameLabel}</label>
               <input
                 {...register('businessName')}
                 placeholder="Barbearia Central"
@@ -115,7 +118,7 @@ export function RegisterOwnerPage() {
             </div>
 
             <div>
-              <label className="label">Public URL</label>
+              <label className="label">{tr.urlLabel}</label>
               <div className="flex items-center">
                 <span className="bg-ink-700 border border-r-0 border-ink-600 rounded-l-lg px-3 py-3 text-sm text-ink-400 font-mono whitespace-nowrap">
                   schedully.app/
@@ -140,14 +143,14 @@ export function RegisterOwnerPage() {
           )}
 
           <button type="submit" disabled={isSubmitting} className="btn-primary w-full">
-            {isSubmitting ? 'Creating account…' : 'Create business account →'}
+            {isSubmitting ? tr.submitting : tr.submit}
           </button>
         </form>
 
         <p className="mt-6 text-center text-ink-400 text-sm">
-          Already have an account?{' '}
+          {tr.alreadyHaveAccount}{' '}
           <Link to="/login" className="text-amber-500 hover:text-amber-400 transition-colors">
-            Sign in
+            {tr.signIn}
           </Link>
         </p>
       </div>

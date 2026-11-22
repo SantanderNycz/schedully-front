@@ -48,7 +48,7 @@ export function DashboardPage() {
 
   useEffect(() => {
     if (!user) fetchMe();
-  }, []);
+  }, [user, fetchMe]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -129,6 +129,7 @@ export function DashboardPage() {
                       autoFocus
                     />
                     {nameError && <span className="text-red-400 text-xs mt-0.5">{nameError}</span>}
+                    <span className="text-ink-500 text-xs mt-0.5">{t.renameUrlHint}</span>
                   </div>
                 ) : (
                   <button
@@ -146,6 +147,9 @@ export function DashboardPage() {
                 )}
                 <span className="font-mono text-xs bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-full border border-amber-500/20">
                   {business.plan}
+                </span>
+                <span className="font-mono text-xs text-ink-600 hidden md:inline" title="Your public booking URL">
+                  schedully.app/{business.slug}
                 </span>
               </>
             )}

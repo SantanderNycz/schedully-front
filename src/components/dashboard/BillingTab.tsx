@@ -74,7 +74,7 @@ export function BillingTab() {
           <div className="flex items-start justify-between mb-4">
             <div>
               <p className="font-medium text-ink-200">Free</p>
-              <p className="text-2xl font-bold text-ink-100 mt-1">$0<span className="text-sm font-normal text-ink-400">/mo</span></p>
+              <p className="text-2xl font-bold text-ink-100 mt-1">€0<span className="text-sm font-normal text-ink-400">/mo</span></p>
             </div>
             {!isPro && (
               <span className="font-mono text-xs bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-full border border-amber-500/20">
@@ -94,7 +94,7 @@ export function BillingTab() {
           <div className="flex items-start justify-between mb-4">
             <div>
               <p className="font-medium text-ink-200">Pro</p>
-              <p className="text-2xl font-bold text-ink-100 mt-1">$19<span className="text-sm font-normal text-ink-400">/mo</span></p>
+              <p className="text-2xl font-bold text-ink-100 mt-1">€19<span className="text-sm font-normal text-ink-400">/mo</span></p>
             </div>
             {isPro && (
               <span className="font-mono text-xs bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-full border border-amber-500/20">
