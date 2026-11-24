@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../lib/api';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { CardListSkeleton } from '../Skeleton';
 
 interface Booking {
   id: string;
@@ -38,7 +39,7 @@ export function ClientBookingsTab() {
     cancelled: t.bookings.cancelled,
   };
 
-  if (loading) return <div className="text-ink-400 font-mono text-sm animate-pulse">{t.loading}</div>;
+  if (loading) return <CardListSkeleton rows={3} />;
 
   if (bookings.length === 0) {
     return (

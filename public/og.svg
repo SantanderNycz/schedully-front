@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#0D0D0F"/>
+  <rect x="1" y="1" width="1198" height="628" fill="none" stroke="#1A1A20" stroke-width="2"/>
+
+  <!-- calendar mark -->
+  <g transform="translate(96 232)">
+    <rect x="0" y="0" width="150" height="142" rx="28" fill="none" stroke="#F59E0B" stroke-width="12"/>
+    <line x1="0" y1="44" x2="150" y2="44" stroke="#F59E0B" stroke-width="12"/>
+    <circle cx="75" cy="98" r="18" fill="#F59E0B"/>
+  </g>
+
+  <text x="300" y="286" font-family="'DM Sans', system-ui, sans-serif" font-size="92" font-weight="600" fill="#E8E8EA">Schedully</text>
+  <text x="300" y="356" font-family="'DM Sans', system-ui, sans-serif" font-size="38" font-weight="400" fill="#9B9BA3">Your booking page, live in minutes.</text>
+  <text x="300" y="412" font-family="'DM Mono', monospace" font-size="24" fill="#F59E0B">Multi-tenant scheduling for service businesses</text>
+</svg>
