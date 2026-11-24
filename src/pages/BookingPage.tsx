@@ -33,9 +33,10 @@ function getDatesForNextDays(n: number): string[] {
 
 const LANGUAGE_LOCALES: Record<Language, string> = {
   en: 'en-GB',
-  pt: 'pt-PT',
-  fr: 'fr-FR',
+  'pt-PT': 'pt-PT',
+  'pt-BR': 'pt-BR',
   es: 'es-ES',
+  fr: 'fr-FR',
   zh: 'zh-CN',
 };
 
