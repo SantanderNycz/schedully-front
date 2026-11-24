@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../lib/api';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { CardListSkeleton } from '../Skeleton';
 
 interface Service {
   id: string;
@@ -73,7 +74,7 @@ export function ServicesTab() {
     setShowForm(false);
   };
 
-  if (loading) return <div className="text-ink-400 font-mono text-sm animate-pulse">{t.loading}</div>;
+  if (loading) return <CardListSkeleton rows={3} />;
 
   return (
     <div className="space-y-6">

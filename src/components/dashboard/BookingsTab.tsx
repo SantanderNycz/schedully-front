@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../lib/api';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { CardListSkeleton } from '../Skeleton';
 
 interface Booking {
   id: string;
@@ -62,7 +63,7 @@ export function BookingsTab() {
     cancelled: t.bookings.cancelled,
   };
 
-  if (loading) return <div className="text-ink-400 font-mono text-sm animate-pulse">{t.loading}</div>;
+  if (loading) return <CardListSkeleton rows={4} />;
 
   return (
     <div className="space-y-6">
