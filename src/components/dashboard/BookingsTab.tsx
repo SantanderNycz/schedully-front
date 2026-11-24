@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../../lib/api';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useAuthStore } from '../../hooks/useAuthStore';
 import { CardListSkeleton } from '../Skeleton';
 
 interface Booking {
@@ -24,6 +25,7 @@ const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export function BookingsTab() {
   const { t } = useLanguage();
+  const { business } = useAuthStore();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'pending' | 'confirmed' | 'cancelled'>('all');
@@ -94,7 +96,17 @@ export function BookingsTab() {
       {filtered.length === 0 ? (
         <div className="card text-center py-12">
           <p className="font-display text-xl text-ink-400 mb-2">{t.bookings.empty}</p>
-          <p className="text-ink-500 text-sm">{t.bookings.emptyHint}</p>
+          <p className="text-ink-500 text-sm mb-6">{t.bookings.emptyHint}</p>
+          {business && (
+            <a
+              href={`/book/${business.slug}`}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-primary"
+            >
+              {t.viewBookingPage}
+            </a>
+          )}
         </div>
       ) : (
         <div className="space-y-3">

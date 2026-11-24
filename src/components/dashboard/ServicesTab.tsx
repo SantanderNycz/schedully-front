@@ -157,7 +157,10 @@ export function ServicesTab() {
       {services.length === 0 && !showForm ? (
         <div className="card text-center py-12">
           <p className="font-display text-xl text-ink-400 mb-2">{t.services.empty}</p>
-          <p className="text-ink-500 text-sm">{t.services.emptyHint}</p>
+          <p className="text-ink-500 text-sm mb-6">{t.services.emptyHint}</p>
+          <button onClick={() => setShowForm(true)} className="btn-primary">
+            {t.services.add}
+          </button>
         </div>
       ) : (
         <div className="space-y-3">
